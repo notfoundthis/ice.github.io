@@ -299,7 +299,7 @@
 
     function startTrying() {
         const output = document.getElementById('output');
-        const interval = Math.floor(Math.random() * 20000) + 500; // Random interval between 500ms and 3500ms
+        const interval = Math.floor(Math.random() * 800) + 200; // Random interval between 500ms and 3500ms
         setTimeout(() => {
             output.innerHTML = `<p>Trying ${attempt}...</p>`; // Replace the previous message
             attempt++;
