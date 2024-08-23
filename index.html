@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Ice Wallet Finder</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background: linear-gradient(135deg, #0f0f0f, #333333);
+            color: #00ff00;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+            position: relative;
+            background-image: url('https://c0.wallpaperflare.com/preview/95/719/793/leather-light-black-material.jpg'); /* Optional texture */
+            background-size: cover;
+        }
+
+        .container {
+            background-color: rgba(26, 26, 26, 0.9);
+            border-radius: 12px;
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            border: 2px solid #00ff00;
+            position: relative;
+            overflow: hidden; /* To contain animated effects */
+        }
+
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00, 0 0 40px #00ff00;
+            }
+            100% {
+                box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00, 0 0 40px #00ff00, 0 0 50px #00ff00;
+            }
+        }
+
+        h1 {
+            font-size: 26px;
+            margin-bottom: 20px;
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+            animation: flicker 3s infinite, bounce 1s infinite;
+        }
+
+        @keyframes flicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% {
+                opacity: 1;
+            }
+            20%, 24%, 55% {
+                opacity: 0.4;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .total-balance {
+            font-size: 18px;
+            margin-top: 10px;
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        button {
+            background-color: #00ff00;
+            color: #0f0f0f;
+            border: 2px solid #00ff00;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+            text-shadow: 0 0 5px #0f0f0f;
+            margin: 10px 0;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        button:hover {
+            background-color: #0f0f0f;
+            color: #00ff00;
+            transform: scale(1.1);
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        .output {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+            white-space: nowrap;
+            border-right: 2px solid #00ff00;
+            animation: typing 3s steps(20, end) infinite, blink 1s step-end infinite;
+        }
+
+        @keyframes typing {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100%;
+            }
+        }
+
+        @keyframes blink {
+            50% {
+                border-color: transparent;
+            }
+        }
+
+        .found-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(26, 26, 26, 0.8); /* Original background */
+            border-radius: 10px;
+            border: 2px solid #00ff00; /* Original border color */
+            box-shadow: 0 0 15px #00ff00;
+            display: none;
+            font-size: 18px;
+            position: relative;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes rotate3D {
+            0% {
+                transform: rotateY(0deg);
+            }
+            50% {
+                transform: rotateY(180deg);
+            }
+            100% {
+                transform: rotateY(360deg);
+            }
+        }
+
+        .found-section h2 {
+            margin: 0;
+            font-size: 20px;
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+            border-bottom: 1px solid #00ff00;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+            animation: slideIn 1s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .found-content {
+            background-color: #222;
+            border: 2px solid #00ff00;
+            padding: 10px;
+            border-radius: 8px;
+            color: #ffffff;
+            text-shadow: 0 0 5px #00ff00;
+            font-size: 16px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .random-words {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: auto;
+            max-width: 150px;
+            padding: 5px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #00ff00;
+            border-radius: 8px;
+            color: #00ff00;
+            font-size: 14px;
+            font-weight: bold;
+            text-shadow: 0 0 5px #00ff00;
+            white-space: nowrap;
+            overflow: hidden;
+            animation: wordsChange 1s infinite;
+        }
+
+        @keyframes wordsChange {
+            0% { content: 'Loading...'; }
+            25% { content: 'Scanning...'; }
+            50% { content: 'Searching...'; }
+            75% { content: 'Decrypting...'; }
+            100% { content: 'Analyzing...'; }
+        }
+
+        .copy-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #ff0000;
+            color: #ffffff;
+            border: 2px solid #ff0000;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+            animation: shake 0.5s infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-5px);
+            }
+            50% {
+                transform: translateX(5px);
+            }
+            75% {
+                transform: translateX(-5px);
+            }
+        }
+
+        .copy-button:hover {
+            background-color: #ffffff;
+            color: #ff0000;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Crypto Ice Wallet Finder</h1>
+    <button id="findButton">Find Wallet</button>
+
+    <div class="output" id="output"></div>
+
+    <div class="found-section" id="foundSection">
+        <h2>Found</h2>
+        <div class="found-content" id="foundContent">
+            <p>No wallets found.</p>
+        </div>
+        <div class="total-balance">Total Balance: 0 BTC</div>
+        <button class="copy-button" id="copyButton">Copy Found Wallets</button>
+    </div>
+
+    <div class="random-words" id="randomWords"></div>
+</div>
+
+<script>
+    let attempt = 1;
+    document.getElementById('findButton').onclick = function() {
+        document.getElementById('findButton').disabled = true; // Disable the button once clicked
+        document.getElementById('foundSection').style.display = 'block'; // Show the found section
+        startTrying();
+    };
+
+    function startTrying() {
+        const output = document.getElementById('output');
+        const interval = Math.floor(Math.random() * 20000) + 500; // Random interval between 500ms and 3500ms
+        setTimeout(() => {
+            output.innerHTML = `<p>Trying ${attempt}...</p>`; // Replace the previous message
+            attempt++;
+            startTrying(); // Recursive call to continue trying
+        }, interval);
+    }
+
+    // Random words change effect
+    const words = ['Words...', 'Scanning...', 'Searching...', 'Decrypting...', 'Analyzing...'];
+    const randomWords = document.getElementById('randomWords');
+    let wordIndex = 0;
+
+    function updateRandomWords() {
+        randomWords.textContent = words[wordIndex];
+        wordIndex = (wordIndex + 1) % words.length;
+    }
+
+    setInterval(updateRandomWords, 1000);
+
+    // Copy found wallet button
+    document.getElementById('copyButton').onclick = function() {
+        const foundContent = document.getElementById('foundContent').textContent;
+        navigator.clipboard.writeText(foundContent)
+            .then(() => alert('Wallet copied to clipboard'))
+            .catch(err => alert('Failed to copy wallet: ' + err));
+    };
+
+    // Rotate animation for found-section
+    function startRotation() {
+        const foundSection = document.getElementById('foundSection');
+        foundSection.style.animation = 'none'; // Reset animation
+        void foundSection.offsetWidth; // Trigger reflow
+        foundSection.style.animation = 'rotate3D 1s linear';
+    }
+
+    // Rotate every 1 minute
+    setInterval(startRotation, 15000);
+</script>
+
+</body>
+</html>
